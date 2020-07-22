@@ -13,8 +13,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: pitchPerfect
   title: Pitch Perfect
-  author: 
-  description: 
+  author: UltraCboy
+  description: "There, my first non-needy module. This one requires you to identify
+    the names of pitches played by the module. However, since perfect pitch is something
+    very few people have, there are plenty of features to help those who would struggle
+    with this.\n\nIf you have any issues or suggestions, your best bet is to contact
+    me on Discord, either through DMs or through the KTANE Discord server. My username
+    is UltraCboy#4639.\r\n\r\nModule idea by ktane1, implemented by UltraCboy\nModule
+    ID: pitchPerfect\nManual Page: Available in the build folder, will eventually
+    be available at ktane.timwi.de\r\n\r\nThank you, apologies to the tone deaf, and
+    happy defusing!"
   version: 1.0
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: 7dd6130df78f5f6418e8da33954bcc8d, type: 3}

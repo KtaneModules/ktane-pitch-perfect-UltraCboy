@@ -6,7 +6,7 @@ public class PitchPerfect : MonoBehaviour {
 	public KMSelectable PlayButton, SubmitButton, CycleFlat, CycleSharp, ReferencePitch;
 	public KMAudio PPKMAudio;
 	public KMBombModule PPModule;
-	public AudioSource PPAudio, SolveAudio;
+	public AudioSource PPAudio, LowCAudio, SolveAudio;
 	public TextMesh MainText;
 	public MeshRenderer[] StageInd;
 	public Color On, Off, Red;
@@ -92,7 +92,7 @@ public class PitchPerfect : MonoBehaviour {
 		NoteIndex = output;
 		while (NoteIndex < 0) NoteIndex += 12;
 		while (NoteIndex >= 12) NoteIndex -= 12;
-		DebugMsg("The generated note for Stage " + (CurrentStage + 1) + " is " + NoteNames[NoteIndex]);
+		DebugMsg("The generated note for Stage " + (CurrentStage + 1) + " is " + NoteNames[NoteIndex] + "(Value: " + output + ")");
 		return output;
 	}
 	public void CycleMainScreen(int dir)
@@ -106,9 +106,19 @@ public class PitchPerfect : MonoBehaviour {
 	}
 	public void PlayNote(int note)
 	{
-		float transpose = -12; // -12 -> 1 octave lower
-		PPAudio.pitch = Mathf.Pow(2, (note + transpose) / 12f);
-		PPAudio.Play();
+		AudioSource Sound; float transpose;
+		if (note > -8)
+		{
+			transpose = -12;
+			Sound = PPAudio;
+		}
+		else
+		{
+			transpose = 12;
+			Sound = LowCAudio;
+		} //LowC < (note = 0) < PPAudio
+		Sound.pitch = Mathf.Pow(2, (note + transpose) / 12f);
+		Sound.Play();
 	}
 	public void Submit()
 	{
