@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class PitchPerfect : MonoBehaviour {
 	public KMSelectable PlayButton, SubmitButton, CycleFlat, CycleSharp, ReferencePitch;
@@ -171,6 +173,58 @@ public class PitchPerfect : MonoBehaviour {
 		{
 			if (i < CurrentStage) StageInd[i].material = StageOn;
 			else StageInd[i].material = StageOff;
+		}
+	}
+#pragma warning disable 414
+	private string TwitchHelpMessage = "!{0} [note name] to cycle screen to that note. Use # for sharp and b for flat. " +
+		"Either flat, sharp, or both will work (ie c#, db, and c#/db will work) Type !{0} play to play stage note, " +
+		"!{0} ref to play reference, !{0} submit to submit. Next stage note will automatically play on a correct answer.";
+#pragma warning restore 414
+	private string[,] AcceptableNames =
+	{
+		{ "c", null, null },
+		{ "c#", "db", "c#/db" },
+		{ "d", null, null },
+		{ "d#", "eb", "d#/eb" },
+		{ "e", null, null },
+		{ "f", null, null },
+		{ "f#", "gb", "f#/gb" },
+		{ "g", null, null },
+		{ "g#", "ab", "g#/ab" },
+		{ "a", null, null },
+		{ "a#", "bb", "a#/bb" },
+		{ "b", null, null }
+	};
+	private KMSelectable[] ProcessTwitchCommand(string command)
+	{
+		command = command.ToLowerInvariant().Trim();
+		switch (command)
+		{
+			case "play": return new KMSelectable[] { PlayButton };
+			case "submit":
+				if (Answer == NoteIndex) return new KMSelectable[] { SubmitButton, PlayButton };
+				else return new KMSelectable[] { SubmitButton };
+			case "ref": return new KMSelectable[] { ReferencePitch };
+			default: //Cycling the main screen
+				List<KMSelectable> buttonList = new List<KMSelectable>();
+				int valueToGoTo = -1;
+				for (int i = 0; i < 12; i++){
+					bool found = false;
+					for(int j = 0; j < 3; j++)
+					{
+						if (AcceptableNames[i, j] == null) break;
+						if (AcceptableNames[i, j].Equals(command))
+						{
+							valueToGoTo = i; found = true; break;
+						}
+					}
+					if (found) break;
+				}
+				if (valueToGoTo == -1) return null;
+				int dif = valueToGoTo - Answer;
+				while (dif < 0) dif += 12;
+				for (int i = 0; i < dif; i++) buttonList.Add(CycleSharp);
+				return buttonList.ToArray();
 		}
 	}
 }
