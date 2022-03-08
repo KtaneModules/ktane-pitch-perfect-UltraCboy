@@ -5,6 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class PitchPerfect : MonoBehaviour {
+
 	public KMSelectable PlayButton, SubmitButton, CycleFlat, CycleSharp, ReferencePitch;
 	public KMAudio PPKMAudio;
 	public KMBombModule PPModule;
@@ -44,15 +45,15 @@ public class PitchPerfect : MonoBehaviour {
 		CycleSharp.OnInteract += delegate { HandlePress(3); return false; };
 		SubmitButton.OnInteract += delegate { HandlePress(4); return false; };
 
-		PPModule.OnPass += delegate { 
-			SolveAudio.Play();
-			IsSolved = true;
-			return true; 
-		};
-
 		Light = Instantiate(Light);
 		Light.GetStatusLights(PPModule.GetComponent<Transform>());
 		Light.Module = PPModule;
+
+		PPModule.OnPass += delegate {
+			SolveAudio.Play();
+			IsSolved = true;
+			return true;
+		};
 	}
 	// Update is called once per frame
 	void Update () {
@@ -227,4 +228,11 @@ public class PitchPerfect : MonoBehaviour {
 				return buttonList.ToArray();
 		}
 	}
+	IEnumerator TwitchHandleForcedSolve()
+    {
+		// This function may be re-written at a later date to do an actual autosolve, but this will suffice for now.
+		Light.HandlePass();
+		DebugMsg("Module force-solved.");
+		yield return new WaitForSeconds(0f);
+    }
 }
